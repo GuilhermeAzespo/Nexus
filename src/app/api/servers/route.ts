@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerAuthSession } from "@/lib/auth";
-import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request) {
   try {
@@ -20,7 +19,7 @@ export async function POST(req: Request) {
       data: {
         name,
         imageUrl,
-        inviteCode: uuidv4(),
+        inviteCode: crypto.randomUUID(),
         ownerId: session.userId,
         members: {
           create: [
