@@ -9,6 +9,7 @@ export default async function ServerLayout(props: {
   children: React.ReactNode;
   params: Promise<{ serverId: string }>;
 }) {
+  const { children } = props;
   const params = await props.params;
   const session = await getServerAuthSession();
   if (!session) return redirect("/login");
