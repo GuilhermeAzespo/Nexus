@@ -13,6 +13,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+ARG JWT_SECRET
+ENV JWT_SECRET=$JWT_SECRET
+
 # Generate Prisma Client
 RUN npx prisma generate
 
