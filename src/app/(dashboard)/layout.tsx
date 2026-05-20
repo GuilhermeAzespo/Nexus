@@ -1,12 +1,32 @@
 import React from "react";
 import styles from "./dashboard.module.css";
 import Link from "next/link";
+import { getServerAuthSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import SidebarAction from "./components/SidebarAction";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+
+  if (!session) {
+    return redirect("/login");
+  }
+
+  const servers = await prisma.server.findMany({
+    where: {
+      members: {
+        some: {
+          userId: session.userId,
+        },
+      },
+    },
+  });
+
   return (
     <div className={styles.appContainer}>
       <nav className={styles.serverSidebar}>
@@ -16,14 +36,20 @@ export default function DashboardLayout({
           </Link>
         </div>
         <div className={styles.separator}></div>
-        {/* Mock Servers */}
-        <div className={styles.serverIcon}>
-          <img src="https://via.placeholder.com/48" alt="Server 1" />
-        </div>
-        <div className={styles.serverIcon}>
-          <img src="https://via.placeholder.com/48" alt="Server 2" />
-        </div>
-        <button className={styles.addServerBtn}>+</button>
+        
+        {servers.map((server) => (
+          <Link key={server.id} href={`/channels/${server.id}`}>
+            <div className={styles.serverIcon} title={server.name}>
+              {server.imageUrl ? (
+                <img src={server.imageUrl} alt={server.name} />
+              ) : (
+                <span>{server.name.charAt(0).toUpperCase()}</span>
+              )}
+            </div>
+          </Link>
+        ))}
+
+        <SidebarAction />
       </nav>
       <main className={styles.mainContent}>{children}</main>
     </div>
