@@ -1,6 +1,6 @@
 import React from "react";
 import prisma from "@/lib/prisma";
-import styles from "../../../dashboard.module.css";
+import ChatArea from "./ChatArea";
 
 export default async function ChannelPage(props: {
   params: Promise<{ serverId: string; channelId: string }>;
@@ -16,27 +16,6 @@ export default async function ChannelPage(props: {
   }
 
   return (
-    <div className={styles.chatContainer}>
-      <div className={styles.chatHeader}>
-        <span className={styles.hashIcon}>#</span>
-        <span className={styles.channelNameHeader}>{channel.name}</span>
-      </div>
-      <div className={styles.chatMessages}>
-        <div className={styles.chatWelcome}>
-          <h1>Welcome to #{channel.name}!</h1>
-          <p>This is the start of the #{channel.name} channel.</p>
-        </div>
-        {/* Messages will go here */}
-      </div>
-      <div className={styles.chatInputContainer}>
-        <form className={styles.chatForm}>
-          <input
-            type="text"
-            placeholder={`Message #${channel.name}`}
-            className={styles.chatInput}
-          />
-        </form>
-      </div>
-    </div>
+    <ChatArea channel={channel} serverId={params.serverId} />
   );
 }
