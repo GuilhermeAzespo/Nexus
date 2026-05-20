@@ -1,0 +1,196 @@
+.appContainer {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.serverSidebar {
+  width: 72px;
+  background-color: var(--background-tertiary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.serverIconHome,
+.serverIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--background-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.serverIconHome {
+  background-color: var(--surface-glass);
+}
+
+.serverIconHome:hover,
+.serverIcon:hover {
+  border-radius: 16px;
+  background-color: var(--accent-color);
+}
+
+.serverIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.separator {
+  width: 32px;
+  height: 2px;
+  background-color: var(--border-glass);
+  margin: 4px 0;
+}
+
+.addServerBtn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px dashed var(--success);
+  color: var(--success);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.addServerBtn:hover {
+  border-radius: 16px;
+  background-color: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  background-color: var(--background-primary);
+  height: 100%;
+}
+
+.friendsContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.friendsSidebar {
+  width: 240px;
+  background-color: var(--background-secondary);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.searchBar {
+  padding: 12px;
+  margin: 10px;
+  background-color: var(--background-tertiary);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: text;
+}
+
+.friendsList {
+  flex: 1;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.friendItem {
+  padding: 10px 12px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.friendItem:hover {
+  background-color: var(--surface-glass);
+  color: var(--text-primary);
+}
+
+.sectionTitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 16px 12px 8px;
+}
+
+.friendsMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-primary);
+}
+
+.topBar {
+  height: 48px;
+  border-bottom: 1px solid var(--background-tertiary);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+}
+
+.topBarItem {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.topBarItem:hover {
+  background-color: var(--surface-glass);
+  color: var(--text-primary);
+}
+
+.addFriendBtn {
+  background-color: var(--success);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.contentArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
