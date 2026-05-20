@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getServerAuthSession } from "@/lib/auth";
 import styles from "../../dashboard.module.css";
 import Link from "next/link";
+import InviteButton from "./InviteButton";
 
 export default async function ServerLayout(props: {
   children: React.ReactNode;
@@ -45,6 +46,7 @@ export default async function ServerLayout(props: {
         <div className={styles.serverHeader}>
           <h3>{server.name}</h3>
         </div>
+        <InviteButton inviteCode={server.inviteCode} />
         <div className={styles.friendsList}>
           {server.channels.map((channel) => (
             <Link key={channel.id} href={`/channels/${server.id}/${channel.id}`}>

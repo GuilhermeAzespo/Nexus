@@ -1,6 +1,7 @@
 import React from "react";
 import prisma from "@/lib/prisma";
 import ChatArea from "./ChatArea";
+import AudioRoom from "./AudioRoom";
 
 export default async function ChannelPage(props: {
   params: Promise<{ serverId: string; channelId: string }>;
@@ -13,6 +14,10 @@ export default async function ChannelPage(props: {
 
   if (!channel) {
     return <div>Channel not found</div>;
+  }
+
+  if (channel.type === "AUDIO") {
+    return <AudioRoom chatId={channel.id} serverId={params.serverId} />;
   }
 
   return (
