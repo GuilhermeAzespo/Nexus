@@ -2,16 +2,36 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "../auth.module.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication logic
-    console.log("Login attempt with:", email);
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.ok) {
+        router.push("/channels/@me");
+      } else {
+        const data = await res.json();
+        setError(data.error || "Login failed");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    }
   };
 
   return (
@@ -21,6 +41,12 @@ export default function LoginPage() {
           <h1 className={styles.title}>Welcome back!</h1>
           <p className={styles.subtitle}>We're so excited to see you again!</p>
         </div>
+
+        {error && (
+          <div style={{ color: "var(--danger)", textAlign: "center", marginBottom: "16px", fontSize: "14px" }}>
+            {error}
+          </div>
+        )}
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
