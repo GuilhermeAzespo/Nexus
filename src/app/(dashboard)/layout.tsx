@@ -31,7 +31,7 @@ export default async function DashboardLayout({
     <div className={styles.appContainer}>
       <nav className={styles.serverSidebar}>
         <div className={styles.serverIconHome}>
-          <Link href="/channels/@me">
+          <Link href="/channels">
             <span className={styles.homeIcon}>N</span>
           </Link>
         </div>

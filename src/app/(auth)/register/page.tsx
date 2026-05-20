@@ -25,7 +25,7 @@ export default function RegisterPage() {
       });
 
       if (res.ok) {
-        router.push("/channels/@me");
+        router.push("/channels");
       } else {
         const data = await res.json();
         setError(data.error || "Registration failed");

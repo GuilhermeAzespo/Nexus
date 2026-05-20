@@ -22,7 +22,7 @@ export default async function ServerLayout(props: {
   });
 
   if (!server) {
-    return redirect("/channels/@me");
+    return redirect("/channels");
   }
 
   // Verify membership
@@ -36,7 +36,7 @@ export default async function ServerLayout(props: {
   });
 
   if (!member) {
-    return redirect("/channels/@me");
+    return redirect("/channels");
   }
 
   return (
