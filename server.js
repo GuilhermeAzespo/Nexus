@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'production' && !process.env.NEXT_DEV_CUSTOM) {
     dir: currentDir,
     dev: false,
     conf: requiredFiles.config,
-    minimalMode: true
+    minimalMode: false
   });
   handle = nextServer.getRequestHandler();
   startServer();
