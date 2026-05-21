@@ -43,12 +43,13 @@ function startServer() {
       // Attach io to res.socket.server so Next.js pages API routes can access it
       res.socket.server.io = io;
       
-      const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      const { parse } = require("url");
+      const parsedUrl = parse(req.url, true);
       const { pathname } = parsedUrl;
       const fs = require('fs');
 
       // 1. Manually serve Next.js compiled static files
-      if (pathname.startsWith("/_next/static/")) {
+      if (pathname && pathname.startsWith("/_next/static/")) {
         const relativePath = pathname.replace("/_next/static/", "");
         const filePath = path.join(currentDir, ".next/static", relativePath);
         
@@ -81,28 +82,30 @@ function startServer() {
       }
 
       // 2. Manually serve public directory files
-      const publicFilePath = path.join(currentDir, "public", pathname);
-      if (fs.existsSync(publicFilePath)) {
-        const stat = fs.statSync(publicFilePath);
-        if (stat.isFile()) {
-          let contentType = "application/octet-stream";
-          if (pathname.endsWith(".js")) contentType = "application/javascript";
-          else if (pathname.endsWith(".css")) contentType = "text/css";
-          else if (pathname.endsWith(".json")) contentType = "application/json";
-          else if (pathname.endsWith(".png")) contentType = "image/png";
-          else if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) contentType = "image/jpeg";
-          else if (pathname.endsWith(".svg")) contentType = "image/svg+xml";
-          else if (pathname.endsWith(".ico")) contentType = "image/x-icon";
+      if (pathname && pathname !== "/") {
+        const publicFilePath = path.join(currentDir, "public", pathname);
+        if (fs.existsSync(publicFilePath)) {
+          const stat = fs.statSync(publicFilePath);
+          if (stat.isFile()) {
+            let contentType = "application/octet-stream";
+            if (pathname.endsWith(".js")) contentType = "application/javascript";
+            else if (pathname.endsWith(".css")) contentType = "text/css";
+            else if (pathname.endsWith(".json")) contentType = "application/json";
+            else if (pathname.endsWith(".png")) contentType = "image/png";
+            else if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) contentType = "image/jpeg";
+            else if (pathname.endsWith(".svg")) contentType = "image/svg+xml";
+            else if (pathname.endsWith(".ico")) contentType = "image/x-icon";
 
-          res.writeHead(200, {
-            "Content-Type": contentType,
-            "Content-Length": stat.size,
-            "Cache-Control": "public, max-age=3600"
-          });
+            res.writeHead(200, {
+              "Content-Type": contentType,
+              "Content-Length": stat.size,
+              "Cache-Control": "public, max-age=3600"
+            });
 
-          const readStream = fs.createReadStream(publicFilePath);
-          readStream.pipe(res);
-          return;
+            const readStream = fs.createReadStream(publicFilePath);
+            readStream.pipe(res);
+            return;
+          }
         }
       }
 
