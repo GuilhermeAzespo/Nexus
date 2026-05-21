@@ -1,16 +1,44 @@
-const { createServer } = require("http");
-const next = require("next");
+const path = require('path');
+const http = require('http');
 const { Server } = require("socket.io");
 
-const dev = process.env.NODE_ENV !== "production";
-const hostname = "0.0.0.0";
-const port = parseInt(process.env.PORT || "3000", 10);
+const port = parseInt(process.env.PORT || '3000', 10);
+const hostname = process.env.HOSTNAME || '0.0.0.0';
 
-const app = next({ dev, hostname, port });
-const handle = app.getRequestHandler();
+let nextServer;
+let handle;
 
-app.prepare().then(() => {
-  const server = createServer((req, res) => {
+if (process.env.NODE_ENV === 'production' && !process.env.NEXT_DEV_CUSTOM) {
+  // Production Standalone mode: requires no webpack / build dependencies
+  process.env.NEXT_RUNTIME = 'nodejs';
+  const currentDir = path.join(__dirname);
+  const requiredFiles = require(path.join(currentDir, '.next/required-server-files.json'));
+  const NextServer = require('next/dist/server/next-server').default;
+
+  nextServer = new NextServer({
+    hostname,
+    port,
+    dir: currentDir,
+    dev: false,
+    config: requiredFiles.config,
+    minimalMode: true
+  });
+  handle = nextServer.getRequestHandler();
+  startServer();
+} else {
+  // Local development / fallback mode: requires standard next setup
+  const next = require("next");
+  const dev = process.env.NODE_ENV !== "production";
+  const app = next({ dev, hostname, port });
+  handle = app.getRequestHandler();
+  
+  app.prepare().then(() => {
+    startServer();
+  });
+}
+
+function startServer() {
+  const server = http.createServer((req, res) => {
     try {
       // Attach io to res.socket.server so Next.js pages API routes can access it
       res.socket.server.io = io;
@@ -124,4 +152,4 @@ app.prepare().then(() => {
   server.listen(port, () => {
     console.log(`> Ready on http://${hostname}:${port}`);
   });
-});
+}
