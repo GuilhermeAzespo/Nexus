@@ -36,11 +36,18 @@ export async function GET(req: NextRequest) {
 
   const apiKey = process.env.LIVEKIT_API_KEY;
   const apiSecret = process.env.LIVEKIT_API_SECRET;
-  const wsUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
+  const wsUrl = process.env.LIVEKIT_URL || process.env.NEXT_PUBLIC_LIVEKIT_URL;
 
   if (!apiKey || !apiSecret || !wsUrl) {
     return NextResponse.json(
-      { error: "Server misconfigured" },
+      { 
+        error: "Server misconfigured", 
+        details: { 
+          hasApiKey: !!apiKey, 
+          hasApiSecret: !!apiSecret, 
+          hasWsUrl: !!wsUrl 
+        } 
+      },
       { status: 500 }
     );
   }
@@ -49,5 +56,8 @@ export async function GET(req: NextRequest) {
 
   at.addGrant({ room, roomJoin: true, canPublish: true, canSubscribe: true });
 
-  return NextResponse.json({ token: await at.toJwt() });
+  return NextResponse.json({ 
+    token: await at.toJwt(),
+    serverUrl: wsUrl
+  });
 }
