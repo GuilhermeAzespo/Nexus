@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production' && !process.env.NEXT_DEV_CUSTOM) {
     port,
     dir: currentDir,
     dev: false,
-    config: requiredFiles.config,
+    conf: requiredFiles.config,
     minimalMode: true
   });
   handle = nextServer.getRequestHandler();
