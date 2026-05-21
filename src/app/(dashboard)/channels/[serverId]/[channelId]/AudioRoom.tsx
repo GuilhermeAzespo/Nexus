@@ -15,6 +15,11 @@ export default function AudioRoom({
   const [token, setToken] = useState("");
   const [serverUrl, setServerUrl] = useState("");
   const [error, setError] = useState("");
+  const [errorDetails, setErrorDetails] = useState<{
+    hasApiKey?: boolean;
+    hasApiSecret?: boolean;
+    hasWsUrl?: boolean;
+  } | null>(null);
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -31,6 +36,7 @@ export default function AudioRoom({
         if (!resp.ok) {
           const errData = await resp.json();
           setError(errData.error || "Failed to fetch LiveKit token");
+          setErrorDetails(errData.details || null);
           return;
         }
 
@@ -49,7 +55,29 @@ export default function AudioRoom({
       <div style={{ display: "flex", flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center", color: "#f87171", padding: "20px", textAlign: "center" }}>
         <h3 style={{ fontSize: "20px", fontWeight: "bold" }}>Failed to Connect to Voice</h3>
         <p style={{ marginTop: "8px", color: "var(--text-secondary)" }}>{error}</p>
-        <p style={{ fontSize: "12px", marginTop: "12px", color: "#9ca3af" }}>Please check your LiveKit environment variables in Easypanel.</p>
+        
+        {errorDetails && (
+          <div style={{ 
+            marginTop: "16px", 
+            padding: "12px 20px", 
+            backgroundColor: "rgba(248, 113, 113, 0.1)", 
+            borderRadius: "6px", 
+            border: "1px solid rgba(248, 113, 113, 0.2)",
+            textAlign: "left",
+            fontSize: "13px",
+            fontFamily: "monospace",
+            color: "var(--text-secondary)",
+            width: "fit-content",
+            maxWidth: "100%"
+          }}>
+            <div style={{ color: "#ef4444", fontWeight: "bold", marginBottom: "8px" }}>Environment Variable Status:</div>
+            <div>LIVEKIT_API_KEY: {errorDetails.hasApiKey ? "✅ Configured" : "❌ MISSING"}</div>
+            <div>LIVEKIT_API_SECRET: {errorDetails.hasApiSecret ? "✅ Configured" : "❌ MISSING"}</div>
+            <div>LIVEKIT_URL (or NEXT_PUBLIC_LIVEKIT_URL): {errorDetails.hasWsUrl ? "✅ Configured" : "❌ MISSING"}</div>
+          </div>
+        )}
+        
+        <p style={{ fontSize: "12px", marginTop: "16px", color: "#9ca3af" }}>Please check your LiveKit environment variables in Easypanel.</p>
       </div>
     );
   }
