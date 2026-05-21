@@ -50,23 +50,27 @@ function startServer() {
 
       // 1. Manually serve Next.js compiled static files
       if (pathname && pathname.startsWith("/_next/static/")) {
-        const relativePath = pathname.replace("/_next/static/", "");
+        const decodedPathname = decodeURIComponent(pathname);
+        const relativePath = decodedPathname.replace("/_next/static/", "");
         const filePath = path.join(currentDir, ".next/static", relativePath);
+        const exists = fs.existsSync(filePath);
         
-        if (fs.existsSync(filePath)) {
+        console.log(`[Static Intercept] Path: ${pathname} | Decoded: ${decodedPathname} | Resolves: ${filePath} | Exists: ${exists}`);
+        
+        if (exists) {
           const stat = fs.statSync(filePath);
           if (stat.isFile()) {
             let contentType = "application/octet-stream";
-            if (pathname.endsWith(".js")) contentType = "application/javascript";
-            else if (pathname.endsWith(".css")) contentType = "text/css";
-            else if (pathname.endsWith(".json")) contentType = "application/json";
-            else if (pathname.endsWith(".png")) contentType = "image/png";
-            else if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) contentType = "image/jpeg";
-            else if (pathname.endsWith(".svg")) contentType = "image/svg+xml";
-            else if (pathname.endsWith(".woff")) contentType = "font/woff";
-            else if (pathname.endsWith(".woff2")) contentType = "font/woff2";
-            else if (pathname.endsWith(".ttf")) contentType = "font/ttf";
-            else if (pathname.endsWith(".otf")) contentType = "font/otf";
+            if (decodedPathname.endsWith(".js")) contentType = "application/javascript";
+            else if (decodedPathname.endsWith(".css")) contentType = "text/css";
+            else if (decodedPathname.endsWith(".json")) contentType = "application/json";
+            else if (decodedPathname.endsWith(".png")) contentType = "image/png";
+            else if (decodedPathname.endsWith(".jpg") || decodedPathname.endsWith(".jpeg")) contentType = "image/jpeg";
+            else if (decodedPathname.endsWith(".svg")) contentType = "image/svg+xml";
+            else if (decodedPathname.endsWith(".woff")) contentType = "font/woff";
+            else if (decodedPathname.endsWith(".woff2")) contentType = "font/woff2";
+            else if (decodedPathname.endsWith(".ttf")) contentType = "font/ttf";
+            else if (decodedPathname.endsWith(".otf")) contentType = "font/otf";
 
             res.writeHead(200, {
               "Content-Type": contentType,
@@ -83,18 +87,21 @@ function startServer() {
 
       // 2. Manually serve public directory files
       if (pathname && pathname !== "/") {
-        const publicFilePath = path.join(currentDir, "public", pathname);
-        if (fs.existsSync(publicFilePath)) {
+        const decodedPathname = decodeURIComponent(pathname);
+        const publicFilePath = path.join(currentDir, "public", decodedPathname);
+        const exists = fs.existsSync(publicFilePath);
+        
+        if (exists) {
           const stat = fs.statSync(publicFilePath);
           if (stat.isFile()) {
             let contentType = "application/octet-stream";
-            if (pathname.endsWith(".js")) contentType = "application/javascript";
-            else if (pathname.endsWith(".css")) contentType = "text/css";
-            else if (pathname.endsWith(".json")) contentType = "application/json";
-            else if (pathname.endsWith(".png")) contentType = "image/png";
-            else if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) contentType = "image/jpeg";
-            else if (pathname.endsWith(".svg")) contentType = "image/svg+xml";
-            else if (pathname.endsWith(".ico")) contentType = "image/x-icon";
+            if (decodedPathname.endsWith(".js")) contentType = "application/javascript";
+            else if (decodedPathname.endsWith(".css")) contentType = "text/css";
+            else if (decodedPathname.endsWith(".json")) contentType = "application/json";
+            else if (decodedPathname.endsWith(".png")) contentType = "image/png";
+            else if (decodedPathname.endsWith(".jpg") || decodedPathname.endsWith(".jpeg")) contentType = "image/jpeg";
+            else if (decodedPathname.endsWith(".svg")) contentType = "image/svg+xml";
+            else if (decodedPathname.endsWith(".ico")) contentType = "image/x-icon";
 
             res.writeHead(200, {
               "Content-Type": contentType,
