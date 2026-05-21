@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { LiveKitRoom, VideoConference, RoomAudioRenderer } from "@livekit/components-react";
 import "@livekit/components-styles";
 import { useSocket } from "@/components/providers/SocketProvider";
+import { useRouter } from "next/navigation";
 
 export default function AudioRoom({
   chatId,
@@ -16,6 +17,7 @@ export default function AudioRoom({
   userName: string;
   userId: string;
 }) {
+  const router = useRouter();
   const [token, setToken] = useState("");
   const [serverUrl, setServerUrl] = useState("");
   const [error, setError] = useState("");
@@ -113,6 +115,9 @@ export default function AudioRoom({
       serverUrl={serverUrl}
       data-lk-theme="default"
       style={{ height: "100%", width: "100%" }}
+      onDisconnected={() => {
+        router.push(`/channels/${serverId}`);
+      }}
     >
       <VideoConference />
       <RoomAudioRenderer />
