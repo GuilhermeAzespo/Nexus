@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/lib/auth";
 import styles from "../../dashboard.module.css";
 import Link from "next/link";
 import InviteButton from "./InviteButton";
+import CreateChannelButton from "./CreateChannelButton";
 
 export default async function ServerLayout(props: {
   children: React.ReactNode;
@@ -47,11 +48,17 @@ export default async function ServerLayout(props: {
           <h3>{server.name}</h3>
         </div>
         <InviteButton inviteCode={server.inviteCode} />
+        <div className={styles.channelsHeader}>
+          <span className={styles.channelsHeaderLabel}>Channels</span>
+          {(member.role === "ADMIN" || member.role === "MODERATOR") && (
+            <CreateChannelButton serverId={server.id} />
+          )}
+        </div>
         <div className={styles.friendsList}>
           {server.channels.map((channel) => (
             <Link key={channel.id} href={`/channels/${server.id}/${channel.id}`}>
               <div className={styles.friendItem}>
-                # {channel.name}
+                {channel.type === "TEXT" ? "#" : "🔊"} {channel.name}
               </div>
             </Link>
           ))}

@@ -28,7 +28,8 @@ export async function POST(req: Request) {
         },
         channels: {
           create: [
-            { name: "geral", type: "TEXT" }
+            { name: "geral", type: "TEXT" },
+            { name: "Sala de Voz", type: "AUDIO" }
           ]
         }
       }
