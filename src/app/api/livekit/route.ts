@@ -34,9 +34,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const apiKey = process.env.LIVEKIT_API_KEY;
-  const apiSecret = process.env.LIVEKIT_API_SECRET;
-  const wsUrl = process.env.LIVEKIT_URL || process.env.NEXT_PUBLIC_LIVEKIT_URL;
+  const apiKey = process.env.LIVEKIT_API_KEY?.trim();
+  const apiSecret = process.env.LIVEKIT_API_SECRET?.trim();
+  const wsUrl = (process.env.LIVEKIT_URL || process.env.NEXT_PUBLIC_LIVEKIT_URL)?.trim();
 
   if (!apiKey || !apiSecret || !wsUrl) {
     return NextResponse.json(
