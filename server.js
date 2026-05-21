@@ -44,6 +44,68 @@ function startServer() {
       res.socket.server.io = io;
       
       const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      const { pathname } = parsedUrl;
+      const fs = require('fs');
+
+      // 1. Manually serve Next.js compiled static files
+      if (pathname.startsWith("/_next/static/")) {
+        const relativePath = pathname.replace("/_next/static/", "");
+        const filePath = path.join(currentDir, ".next/static", relativePath);
+        
+        if (fs.existsSync(filePath)) {
+          const stat = fs.statSync(filePath);
+          if (stat.isFile()) {
+            let contentType = "application/octet-stream";
+            if (pathname.endsWith(".js")) contentType = "application/javascript";
+            else if (pathname.endsWith(".css")) contentType = "text/css";
+            else if (pathname.endsWith(".json")) contentType = "application/json";
+            else if (pathname.endsWith(".png")) contentType = "image/png";
+            else if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) contentType = "image/jpeg";
+            else if (pathname.endsWith(".svg")) contentType = "image/svg+xml";
+            else if (pathname.endsWith(".woff")) contentType = "font/woff";
+            else if (pathname.endsWith(".woff2")) contentType = "font/woff2";
+            else if (pathname.endsWith(".ttf")) contentType = "font/ttf";
+            else if (pathname.endsWith(".otf")) contentType = "font/otf";
+
+            res.writeHead(200, {
+              "Content-Type": contentType,
+              "Content-Length": stat.size,
+              "Cache-Control": "public, max-age=31536000, immutable"
+            });
+
+            const readStream = fs.createReadStream(filePath);
+            readStream.pipe(res);
+            return;
+          }
+        }
+      }
+
+      // 2. Manually serve public directory files
+      const publicFilePath = path.join(currentDir, "public", pathname);
+      if (fs.existsSync(publicFilePath)) {
+        const stat = fs.statSync(publicFilePath);
+        if (stat.isFile()) {
+          let contentType = "application/octet-stream";
+          if (pathname.endsWith(".js")) contentType = "application/javascript";
+          else if (pathname.endsWith(".css")) contentType = "text/css";
+          else if (pathname.endsWith(".json")) contentType = "application/json";
+          else if (pathname.endsWith(".png")) contentType = "image/png";
+          else if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) contentType = "image/jpeg";
+          else if (pathname.endsWith(".svg")) contentType = "image/svg+xml";
+          else if (pathname.endsWith(".ico")) contentType = "image/x-icon";
+
+          res.writeHead(200, {
+            "Content-Type": contentType,
+            "Content-Length": stat.size,
+            "Cache-Control": "public, max-age=3600"
+          });
+
+          const readStream = fs.createReadStream(publicFilePath);
+          readStream.pipe(res);
+          return;
+        }
+      }
+
       handle(req, res, parsedUrl);
     } catch (err) {
       console.error("Error occurred handling", req.url, err);
