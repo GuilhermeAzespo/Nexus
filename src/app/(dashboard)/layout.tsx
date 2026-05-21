@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import SidebarAction from "./components/SidebarAction";
+import LogoutButton from "./components/LogoutButton";
 
 export default async function DashboardLayout({
   children,
@@ -50,6 +51,10 @@ export default async function DashboardLayout({
         ))}
 
         <SidebarAction />
+
+        <div className={styles.logoutWrapper}>
+          <LogoutButton />
+        </div>
       </nav>
       <main className={styles.mainContent}>{children}</main>
     </div>

@@ -504,3 +504,29 @@
   white-space: nowrap;
 }
 
+.logoutWrapper {
+  margin-top: auto;
+  padding-bottom: 8px;
+}
+
+.logoutButton {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--background-secondary);
+  border: none;
+  color: #f87171;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logoutButton:hover {
+  border-radius: 16px;
+  background-color: #ef4444;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
