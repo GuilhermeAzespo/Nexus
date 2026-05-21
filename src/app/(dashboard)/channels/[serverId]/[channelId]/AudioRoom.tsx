@@ -8,9 +8,11 @@ import { useSocket } from "@/components/providers/SocketProvider";
 export default function AudioRoom({
   chatId,
   serverId,
+  userName,
 }: {
   chatId: string;
   serverId: string;
+  userName: string;
 }) {
   const [token, setToken] = useState("");
   const [serverUrl, setServerUrl] = useState("");
@@ -20,17 +22,12 @@ export default function AudioRoom({
     hasApiSecret?: boolean;
     hasWsUrl?: boolean;
   } | null>(null);
-  const [name, setName] = useState("");
 
   useEffect(() => {
-    // Generate a random name for demo purposes, or fetch user profile
-    const randomName = `User_${Math.floor(Math.random() * 1000)}`;
-    setName(randomName);
-
     (async () => {
       try {
         const resp = await fetch(
-          `/api/livekit?room=${chatId}&username=${randomName}&serverId=${serverId}`
+          `/api/livekit?room=${chatId}&username=${encodeURIComponent(userName)}&serverId=${serverId}`
         );
         
         if (!resp.ok) {
@@ -48,7 +45,7 @@ export default function AudioRoom({
         setError("Network error connecting to the authentication server.");
       }
     })();
-  }, [chatId, serverId]);
+  }, [chatId, serverId, userName]);
 
   if (error) {
     return (
