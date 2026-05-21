@@ -9,10 +9,12 @@ export default function AudioRoom({
   chatId,
   serverId,
   userName,
+  userId,
 }: {
   chatId: string;
   serverId: string;
   userName: string;
+  userId: string;
 }) {
   const [token, setToken] = useState("");
   const [serverUrl, setServerUrl] = useState("");
@@ -22,6 +24,8 @@ export default function AudioRoom({
     hasApiSecret?: boolean;
     hasWsUrl?: boolean;
   } | null>(null);
+
+  const { socket } = useSocket();
 
   useEffect(() => {
     (async () => {
@@ -46,6 +50,24 @@ export default function AudioRoom({
       }
     })();
   }, [chatId, serverId, userName]);
+
+  useEffect(() => {
+    if (!socket || !userId) return;
+
+    socket.emit("join-voice", {
+      channelId: chatId,
+      serverId,
+      userId,
+      userName,
+    });
+
+    return () => {
+      socket.emit("leave-voice", {
+        channelId: chatId,
+        userId,
+      });
+    };
+  }, [socket, chatId, serverId, userId, userName]);
 
   if (error) {
     return (

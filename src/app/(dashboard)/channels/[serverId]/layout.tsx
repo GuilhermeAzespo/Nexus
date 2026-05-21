@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { getServerAuthSession } from "@/lib/auth";
 import styles from "../../dashboard.module.css";
-import Link from "next/link";
+import ChannelsSidebarList from "./ChannelsSidebarList";
 import InviteButton from "./InviteButton";
 import CreateChannelButton from "./CreateChannelButton";
 
@@ -54,15 +54,7 @@ export default async function ServerLayout(props: {
             <CreateChannelButton serverId={server.id} />
           )}
         </div>
-        <div className={styles.friendsList}>
-          {server.channels.map((channel) => (
-            <Link key={channel.id} href={`/channels/${server.id}/${channel.id}`}>
-              <div className={styles.friendItem}>
-                {channel.type === "TEXT" ? "#" : "🔊"} {channel.name}
-              </div>
-            </Link>
-          ))}
-        </div>
+        <ChannelsSidebarList channels={server.channels} serverId={server.id} />
       </div>
       <div className={styles.friendsMain}>{children}</div>
     </div>

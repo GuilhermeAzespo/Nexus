@@ -25,7 +25,14 @@ export default async function ChannelPage(props: {
   }
 
   if (channel.type === "AUDIO") {
-    return <AudioRoom chatId={channel.id} serverId={params.serverId} userName={userName} />;
+    return (
+      <AudioRoom 
+        chatId={channel.id} 
+        serverId={params.serverId} 
+        userName={userName} 
+        userId={session?.userId || ""} 
+      />
+    );
   }
 
   return (
