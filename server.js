@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const hostname = process.env.HOSTNAME || '0.0.0.0';
+const currentDir = path.join(__dirname);
 
 let nextServer;
 let handle;
@@ -11,7 +12,6 @@ let handle;
 if (process.env.NODE_ENV === 'production' && !process.env.NEXT_DEV_CUSTOM) {
   // Production Standalone mode: requires no webpack / build dependencies
   process.env.NEXT_RUNTIME = 'nodejs';
-  const currentDir = path.join(__dirname);
   const requiredFiles = require(path.join(currentDir, '.next/required-server-files.json'));
   const NextServer = require('next/dist/server/next-server').default;
 
